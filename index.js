@@ -37,7 +37,9 @@ let getData = (id) => {
     .then((response) => {
         return response.json();
     })
-    .then((myJson) => {
-        return JSON.stringify(myJson);
+    .then((data) => {
+        const points = data.features;
+
+        return points;
     });
 }
