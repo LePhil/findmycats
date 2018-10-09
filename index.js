@@ -39,7 +39,16 @@ let getData = (id) => {
     })
     .then((data) => {
         const points = data.features;
+        
+        let convertedPoints = [];
 
-        return points;
+        points.forEach(point => {
+            convertedPoints.push({
+                timestamp: point.properties.marker_ts,
+                coordinates: point.geometry.coordinates
+            });
+        });
+
+        return convertedPoints;
     });
 }
