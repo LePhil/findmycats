@@ -52,3 +52,10 @@ let getData = (id) => {
         return convertedPoints;
     });
 }
+
+let changeCat = (id) => {
+    return fetch(`https://www.petpointer.ch/inc/pp-account-switch-tracker.php?key=${id}`)
+    .then((response) => {
+        return response;
+    });
+}
