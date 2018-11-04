@@ -79,3 +79,10 @@ let sendToDB = (timestamp, catId, longitude, latitude) => {
     .then(res => res.json())
     .then(json => console.log(json));
 }
+
+let changeCat = (id) => {
+    return fetch(`https://www.petpointer.ch/inc/pp-account-switch-tracker.php?key=${id}`)
+    .then((response) => {
+        return response;
+    });
+}
