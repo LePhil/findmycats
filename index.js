@@ -1,12 +1,16 @@
 let express = require("express");
 let request = require('request');
 let fetch = require('node-fetch');
+let client = require('redis').createClient(process.env.REDIS_URL);
 let app = express();
 
 const key = process.env.key;
 const secret = process.env.secret;
 const hubble = process.env.id_hubble;
 const james = process.env.id_james;
+
+const uploadUrl = process.env.upload_url;
+const uploadSecret = process.env.upload_secret;
 
 app.listen((process.env.PORT || 3000));
 
@@ -47,8 +51,31 @@ let getData = (id) => {
                 timestamp: point.properties.marker_ts,
                 coordinates: point.geometry.coordinates
             });
+
+            sendToDB(point.properties.marker_ts, id, point.geometry.coordinates[1], point.geometry.coordinates[0]);
         });
 
         return convertedPoints;
     });
+}
+
+let sendToDB = (timestamp, catId, longitude, latitude) => {
+    let cat = "James";
+    if (catId === hubble) {
+        cat = "Hubble";
+    }
+
+    fetch(uploadUrl, { 
+        method: 'POST',
+        body:    JSON.stringify({
+            'secret': uploadSecret,
+            'cat': cat,
+            'date': timestamp,
+            'longitude': longitude,
+            'latitude': latitude
+        }),
+        headers: { 'Content-Type': 'application/json' },
+    })
+    .then(res => res.json())
+    .then(json => console.log(json));
 }
